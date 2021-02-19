@@ -1,3 +1,6 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class Account {
     private Integer AccountID;
     private String AccountType;
@@ -50,16 +53,21 @@ public class Account {
     }
 
     public Account updateCurrentAmount(Double Amount) {
-        CurrentAmount = Math.floor(CurrentAmount + Amount);
+        CurrentAmount = CurrentAmount + Amount;
+        BigDecimal bd = new BigDecimal(this.CurrentAmount).setScale(2, RoundingMode.HALF_UP);
+        CurrentAmount = bd.doubleValue();
         return this;
     }
 
     public Double getCurrentAmount() {
-        return this.CurrentAmount;
+        BigDecimal bd = new BigDecimal(this.CurrentAmount).setScale(2, RoundingMode.HALF_UP);
+        double amount = bd.doubleValue();
+        return amount;
     }
 
     public Account createSnapshot() {
         Account snapshot = new Account(this.AccountID, this.AccountType);
+        snapshot.setInitiatorType(this.InitiatorType);
         snapshot.setTransactionValue(this.TransactionValue);
         snapshot.setDateTime(this.DateTime);
         snapshot.updateCurrentAmount(this.CurrentAmount);

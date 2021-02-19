@@ -1,21 +1,7 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 public class csvReader {
     public static void main(String[] args) throws Exception {
-        //List<List<String>> records = new ArrayList<>();
-        //try (BufferedReader br = new BufferedReader(new FileReader("customer-1234567-ledger.csv"))) {
-        //    String line;
-        //    String headerLine = br.readLine();
-        //    while ((line = br.readLine()) != null) {
-        //        String[] values = line.replaceAll("\"", "").split(",");
-        //        records.add(Arrays.asList(values));
-        //    }
         
-            //mapping the accounts/owner
             Customer Owner = new Customer();
             Account newAccount = null;
             Account snapshot = newAccount;
@@ -46,26 +32,23 @@ public class csvReader {
                 }
                 if(Owner.getAccounts().get(AccountTypes.CURRENT.getAccountType()).getCurrentAmount() < 0 && Owner.getAccounts().get(AccountTypes.SAVINGS.getAccountType()).getCurrentAmount() > 0 - Owner.getAccounts().get(AccountTypes.CURRENT.getAccountType()).getCurrentAmount()) {
                     double overDraftAmount = Owner.getAccounts().get(AccountTypes.CURRENT.getAccountType()).getCurrentAmount();
-                    Account systemAccount = new Account(Owner.getAccounts().get(AccountTypes.SAVINGS.getAccountType()).getAccountID(), Owner.getAccounts().get(AccountTypes.SAVINGS.getAccountType()).getAccountType());
+                    Account systemAccount = new Account(Owner.getAccounts().get(AccountTypes.CURRENT.getAccountType()).getAccountID(), Owner.getAccounts().get(AccountTypes.CURRENT.getAccountType()).getAccountType());
+                    Account systemAccountSaving = new Account(Owner.getAccounts().get(AccountTypes.SAVINGS.getAccountType()).getAccountID(), Owner.getAccounts().get(AccountTypes.SAVINGS.getAccountType()).getAccountType());
                     systemAccount.setInitiatorType(AccountTypes.SYSTEM.getAccountType()).setTransactionValue(Math.abs(overDraftAmount)).setDateTime(Owner.getAccounts().get(AccountTypes.CURRENT.getAccountType()).getDateTime());
+                    systemAccountSaving.setInitiatorType(AccountTypes.SYSTEM.getAccountType()).setTransactionValue(overDraftAmount).setDateTime(Owner.getAccounts().get(AccountTypes.CURRENT.getAccountType()).getDateTime());
                     Owner.getAccounts().get(AccountTypes.SAVINGS.getAccountType()).updateCurrentAmount(overDraftAmount);
                     Owner.getAccounts().get(AccountTypes.CURRENT.getAccountType()).updateCurrentAmount(Math.abs(overDraftAmount));
                     snapshot = systemAccount.createSnapshot();
                     Owner.updateTransactionHistory(snapshot);
+                    snapshot = systemAccountSaving.createSnapshot();
+                    Owner.updateTransactionHistory(snapshot);
                 }
             }
-            for(Account history: Owner.getTransactionHistory()) {
-                System.out.println("-------------------------------------------");
-                System.out.println(history.getAccountID());
-                System.out.println(history.getAccountType());
-                System.out.println(history.getInitiatorType());
-                System.out.println("Transaction:");
-                System.out.println(history.getTransactionValue());
-                System.out.println("BALANCE:");
-                System.out.println(history.getCurrentAmount());
-                System.out.println("TIME:");
-                System.out.println(history.getDateTime());
+
+            Writer records = new Writer();
+            for (Account history: Owner.getTransactionHistory()) {
+            records.setdataLines(history);
+            records.writeCsv();
             }
-            System.out.println(Owner.getTransactionHistory().size()); 
         }
     }
