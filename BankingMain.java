@@ -1,12 +1,13 @@
 import java.util.List;
-public class csvReader {
+public class BankingMain {
     public static void main(String[] args) throws Exception {
         
             Customer owner = new Customer();
             CustomerController customerController = new CustomerController(owner);
             Writer records = new Writer();
+            Reader reader = new Reader();
 
-            for (List<String> record: Reader.read()) {
+            for (List<String> record: reader.read(args[0])) {
                 Integer accountID = Integer.parseInt(record.get(0));
                 String accountType = record.get(1);
                 String dateTime = record.get(3);
@@ -27,7 +28,7 @@ public class csvReader {
 
             for (Account history: customerController.getCustomer().getTransactionHistory()) {
             records.setdataLines(history);
-            records.writeCsv();
+            records.writeCsv(args[1]);
             }
         }
     }
