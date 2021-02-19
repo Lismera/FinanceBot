@@ -6,23 +6,22 @@ import java.util.List;
 
 public class csvReader {
     public static void main(String[] args) throws Exception {
-        List<List<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("customer-1234567-ledger.csv"))) {
-            String line;
-            String headerLine = br.readLine();
-            while ((line = br.readLine()) != null) {
-                String[] values = line.replaceAll("\"", "").split(",");
-                records.add(Arrays.asList(values));
-            }
+        //List<List<String>> records = new ArrayList<>();
+        //try (BufferedReader br = new BufferedReader(new FileReader("customer-1234567-ledger.csv"))) {
+        //    String line;
+        //    String headerLine = br.readLine();
+        //    while ((line = br.readLine()) != null) {
+        //        String[] values = line.replaceAll("\"", "").split(",");
+        //        records.add(Arrays.asList(values));
+        //    }
         
             //mapping the accounts/owner
             Customer Owner = new Customer();
             Account newAccount = null;
             Account snapshot = newAccount;
-            for (List<String> record: records) {
+            for (List<String> record: Reader.read()) {
                 Integer accountID = Integer.parseInt(record.get(0));
                 String accountType = record.get(1);
-                String initiatortype = record.get(2);
                 String datetime = record.get(3);
                 double transactionValue = Double.parseDouble(record.get(4));
                 if (!Owner.getAccounts().containsKey(accountType)) {
@@ -70,4 +69,3 @@ public class csvReader {
             System.out.println(Owner.getTransactionHistory().size()); 
         }
     }
-}
