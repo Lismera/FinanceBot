@@ -1,8 +1,12 @@
+package handlers;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import Models.Account;
 
 public class Writer {
 
@@ -17,7 +21,7 @@ public class Writer {
         return this;
     }
 
-    public String convertToCSV(Account account) {
+    private String convertToCSV(Account account) {
         StringBuilder stringOfAccount = new StringBuilder();
         stringOfAccount.append(account.getAccountID()).append(",")
         .append(account.getAccountType()).append(",")
