@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import Models.Account;
+import models.Account;
 
 public class Writer {
 
@@ -32,7 +32,7 @@ public class Writer {
     }
 
     public void writeCsv(String outputFile) throws FileNotFoundException {
-        File csvOutputFile = new File("record" + outputFile);
+        File csvOutputFile = new File("./output/record" + outputFile);
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             pw.println("AccountID,AccountType,InitiatorType,DateTime,TransactionValue");
             dataLines.forEach(entry -> {

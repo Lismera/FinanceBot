@@ -1,8 +1,8 @@
 package controllers;
 
-import Models.Account;
-import Models.Customer;
 import enums.AccountTypes;
+import models.Account;
+import models.Customer;
 
 public class CustomerController {
 
